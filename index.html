@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inference Companies</title>
+  <style>
+    /* ── Design tokens ─────────────────────────────────────────── */
+    :root {
+      color-scheme: dark;
+      --bg-0:        #06080b;
+      --bg-hero:     rgba(17, 24, 32, 0.92);
+      --bg-table:    rgba(14, 21, 29, 0.9);
+      --bg-row-odd:  rgba(15, 22, 29, 0.72);
+      --bg-row-even: rgba(10, 16, 23, 0.72);
+      --bg-row-hover:rgba(25, 35, 46, 0.88);
+      --bg-head:     linear-gradient(180deg, #1f2a35 0%, #18222c 100%);
+      --border:      #2b3540;
+      --line:        #2d3a48;
+      --text:        #ecf2f8;
+      --muted:       #9ca9b6;
+      --nvidia:      #76b900;
+      --nvidia-soft: #b6e45f;
+      --ice:         #76d8ff;
+      --radius-card: 18px;
+      --font-sans:   "Bahnschrift", "Franklin Gothic Medium", "Segoe UI", sans-serif;
+      --font-serif:  "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    }
+
+    /* ── Reset ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: var(--font-serif);
+      line-height: 1.5;
+      background:
+        radial-gradient(1000px 460px at -8% -18%, rgba(118,185,0,.2), transparent 60%),
+        radial-gradient(740px 420px at 110% 0%, rgba(118,216,255,.13), transparent 60%),
+        linear-gradient(180deg, #05070a 0%, var(--bg-0) 36%, #080b10 100%);
+    }
+
+    /* ── Page wrapper ──────────────────────────────────────────── */
+    .page {
+      width: min(1400px, 96vw);
+      margin: 34px auto;
+    }
+
+    /* ── Hero ──────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: linear-gradient(155deg, var(--bg-hero) 0%, rgba(12,18,24,.92) 100%);
+      border-radius: var(--radius-card);
+      box-shadow: 0 18px 42px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.02);
+      padding: 28px 30px 24px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -28px;
+      top: -40px;
+      width: 260px;
+      height: 160px;
+      border-radius: 40px;
+      background: radial-gradient(circle at 40% 45%, rgba(118,185,0,.26), rgba(118,185,0,.02) 70%);
+      transform: rotate(-12deg);
+      pointer-events: none;
+    }
+
+    .kicker {
+      margin: 0;
+      color: var(--ice);
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: .76rem;
+    }
+
+    h1 {
+      margin: 8px 0;
+      font-family: var(--font-sans);
+      font-weight: 700;
+      font-size: clamp(1.8rem, 2.7vw, 2.55rem);
+      letter-spacing: .01em;
+      text-wrap: balance;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: .98rem;
+      max-width: 90ch;
+    }
+
+    .meta {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      border: 1px solid #394a58;
+      background: linear-gradient(180deg, rgba(20,30,40,.95), rgba(12,20,28,.95));
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-family: var(--font-sans);
+      font-size: .84rem;
+      color: #d7e4f1;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--nvidia);
+      box-shadow: 0 0 0 5px rgba(118,185,0,.15);
+    }
+
+    /* ── Table shell ───────────────────────────────────────────── */
+    .table-shell {
+      margin-top: 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-card);
+      background: var(--bg-table);
+      box-shadow: 0 14px 28px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.02);
+      overflow: hidden;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #486079 #131b24;
+    }
+
+    /* ── Table ─────────────────────────────────────────────────── */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      min-width: 860px;
+    }
+
+    th, td {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 11px 13px;
+      text-align: left;
+      vertical-align: top;
+      font-size: .92rem;
+    }
+
+    th:last-child, td:last-child { border-right: 0; }
+    tbody tr:last-child td { border-bottom: 0; }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: var(--bg-head);
+      color: var(--nvidia-soft);
+      font-family: var(--font-sans);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      font-size: .74rem;
+      font-weight: 700;
+      white-space: nowrap;
+      user-select: none;
+      cursor: pointer;
+    }
+
+    th:hover { color: #fff; }
+
+    /* Sort arrow */
+    th .sort-arrow {
+      display: inline-block;
+      margin-left: 5px;
+      opacity: .35;
+      font-style: normal;
+      font-size: .7rem;
+    }
+    th.sort-asc  .sort-arrow,
+    th.sort-desc .sort-arrow { opacity: 1; color: var(--nvidia); }
+
+    tbody tr:nth-child(odd)  td { background: var(--bg-row-odd); }
+    tbody tr:nth-child(even) td { background: var(--bg-row-even); }
+    tbody tr:hover           td { background: var(--bg-row-hover); }
+
+    td:first-child {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: .95rem;
+      color: #f2f8ff;
+    }
+
+    /* ── Links ─────────────────────────────────────────────────── */
+    a {
+      color: var(--nvidia);
+      text-decoration: none;
+      border-bottom: 1px dotted rgba(182,228,95,.45);
+      transition: color .2s, border-color .2s;
+      word-break: break-word;
+    }
+    a:hover {
+      color: #d4f68f;
+      border-bottom-color: rgba(212,246,143,.85);
+    }
+
+    /* ── Funding round badges ──────────────────────────────────── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid rgba(130,155,181,.45);
+      background: rgba(58,74,91,.3);
+      padding: 3px 9px;
+      font-family: var(--font-sans);
+      font-size: .74rem;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      color: #d7e6f4;
+      white-space: nowrap;
+    }
+    .badge.series  { border-color: rgba(118,185,0,.5);   color: #d3f197; background: rgba(118,185,0,.14); }
+    .badge.seed    { border-color: rgba(118,216,255,.5);  color: #bdeefe; background: rgba(118,216,255,.14); }
+    .badge.strategic{ border-color: rgba(194,166,255,.5); color: #e1d0ff; background: rgba(194,166,255,.14); }
+
+    /* ── Amount raised cell ────────────────────────────────────── */
+    .amount {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      color: #d3f197;
+      white-space: nowrap;
+    }
+
+    /* ── Footer note ───────────────────────────────────────────── */
+    .footer-note {
+      margin-top: 12px;
+      padding-left: 2px;
+      font-size: .88rem;
+      color: #95a3b2;
+    }
+
+    /* ── Responsive: tablet (≤1024px) ─────────────────────────── */
+    @media (max-width: 1024px) {
+      .page { margin: 20px auto; }
+      .hero { padding: 22px 20px 18px; }
+      th, td { padding: 9px 10px; font-size: .86rem; }
+      th { font-size: .7rem; }
+      table { min-width: 720px; }
+    }
+
+    /* ── Responsive: mobile (≤640px) — card layout ────────────── */
+    @media (max-width: 640px) {
+      .page { width: 100%; margin: 0; }
+      .hero { border-radius: 0; border-left: 0; border-right: 0; border-top: 0; padding: 18px 16px 14px; }
+      .hero::after { display: none; }
+      h1 { font-size: 1.5rem; }
+
+      .table-shell {
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+        margin-top: 12px;
+      }
+
+      /* Hide table structure; render as card stack */
+      .table-wrap { overflow: visible; }
+      table, thead, tbody, tr, th, td { display: block; }
+      thead { display: none; }
+
+      tbody tr {
+        border-bottom: 1px solid var(--line);
+        padding: 14px 16px;
+        background: var(--bg-row-odd);
+      }
+      tbody tr:nth-child(even) { background: var(--bg-row-even); }
+      tbody tr:last-child { border-bottom: 0; }
+
+      td {
+        border: 0;
+        padding: 4px 0;
+        font-size: .88rem;
+        display: flex;
+        gap: 8px;
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-family: var(--font-sans);
+        font-size: .68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: var(--muted);
+        min-width: 100px;
+        flex-shrink: 0;
+        padding-top: 2px;
+      }
+
+      td:first-child {
+        font-size: 1rem;
+        margin-bottom: 4px;
+        border-bottom: 1px solid var(--line);
+        padding-bottom: 8px;
+        margin-bottom: 6px;
+        display: block;
+      }
+      td:first-child::before { display: none; }
+      tbody tr:last-child td { border-bottom: 0; }
+
+      .footer-note { padding: 10px 16px; margin-top: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <p class="kicker">Inference Market Radar</p>
+      <h1>Inference Companies</h1>
+      <p class="subtitle">Startup-focused AI inference companies. Headcount and funding details sourced from public pages linked below.</p>
+      <div class="meta">
+        <span class="chip"><span class="dot" aria-hidden="true"></span><span id="companyCount">Companies tracked</span></span>
+      </div>
+    </section>
+
+    <section class="table-shell">
+      <div class="table-wrap">
+        <table id="inferenceTable">
+          <thead>
+            <tr>
+              <th data-col="0" data-type="alpha">Company <span class="sort-arrow">↕</span></th>
+              <th data-col="1" data-type="num">Headcount <span class="sort-arrow">↕</span></th>
+              <th data-col="2" data-type="tier">Funding Round <span class="sort-arrow">↕</span></th>
+              <th data-col="3" data-type="money">Amount Raised <span class="sort-arrow">↕</span></th>
+              <th data-col="4" data-type="alpha">Careers Page <span class="sort-arrow">↕</span></th>
+              <th data-col="5" data-type="alpha">Sources <span class="sort-arrow">↕</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td data-label="Company">CoreWeave</td>
+              <td data-label="Headcount" data-val="933">933 employees (May 2025)</td>
+              <td data-label="Funding Round" data-val="C"><span class="badge series">Series C</span></td>
+              <td data-label="Amount Raised" data-val="1100" class="amount">$1.1B</td>
+              <td data-label="Careers"><a href="https://www.coreweave.com/careers">coreweave.com/careers</a></td>
+              <td data-label="Sources"><a href="https://craft.co/coreweave/human-capital">Headcount</a> | <a href="https://investors.coreweave.com/news/news-details/2024/CoreWeave-Secures-1-1-Billion-in-Series-C-Funding-to-Drive-the-Next-Generation-of-Cloud-Computing-for-the-Future-of-AI/default.aspx">Funding</a></td>
+            </tr>
+            <tr>
+              <td data-label="Company">Nebius</td>
+              <td data-label="Headcount" data-val="596">596 employees (Jul 2025)</td>
+              <td data-label="Funding Round" data-val="strategic"><span class="badge strategic">Strategic</span></td>
+              <td data-label="Amount Raised" data-val="700" class="amount">$700M</td>
+              <td data-label="Careers"><a href="https://nebius.com/careers">nebius.com/careers</a></td>
+              <td data-label="Sources"><a href="https://craft.co/nebius/human-capital">Headcount</a> | <a href="https://nebius.com/newsroom/nebius-announces-oversubscribed-strategic-equity-financing-of-usd-700-million-to-accelerate-roll-out-of-full-stack-ai-infrastructure">Funding</a></td>
+            </tr>
+            <tr>
+              <td data-label="Company">Nscale</td>
+              <td data-label="Headcount" data-val="350">201–500 employees (LinkedIn)</td>
+              <td data-label="Funding Round" data-val="C"><span class="badge series">Series C</span></td>
+              <td data-label="Amount Raised" data-val="2000" class="amount">$2B</td>
+              <td data-label="Careers"><a href="https://www.nscale.com/careers">nscale.com/careers</a></td>
+              <td data-label="Sources"><a href="https://www.linkedin.com/company/nscale-cloud/">Headcount</a> | <a href="https://www.nscale.com/press-releases/nscale-series-c">Funding</a></td>
+            </tr>
+            <tr>
+              <td data-label="Company">Together AI</td>
+              <td data-label="Headcount" data-val="228">228 employees (Jul 2025)</td>
+              <td data-label="Funding Round" data-val="B"><span class="badge series">Series B</span></td>
+              <td data-label="Amount Raised" data-val="305" class="amount">$305M</td>
+              <td data-label="Careers"><a href="https://www.together.ai/careers">together.ai/careers</a></td>
+              <td data-label="Sources"><a href="https://craft.co/together-ai/human-capital">Headcount</a> | <a href="https://www.together.ai/blog/together-ai-announcing-305m-series-b">Funding</a></td>
+            </tr>
+            <tr>
+              <td data-label="Company">Modal</td>
+              <td data-label="Headcount" data-val="70">70 employees (Jul 2025)</td>
+              <td data-label="Funding Round" data-val="B"><span class="badge series">Series B</span></td>
+              <td data-label="Amount Raised" data-val="80" class="amount">$80M+</td>
+              <td data-label="Careers"><a href="https://modal.com/company#careers">modal.com/company#careers</a></td>
+              <td data-label="Sources"><a href="https://craft.co/modal-labs/human-capital">Headcount</a> | <a href="https://modal.com/blog/announcing-our-series-b">Funding</a></td>
+            </tr>
+            <tr>
+              <td data-label="Company">Fireworks AI</td>
+              <td data-label="Headcount" data-val="99">99 employees (Jul 2025)</td>
+              <td data-label="Funding Round" data-val="C"><span class="badge series">Series C</span></td>
+              <td data-label="Amount Raised" data-val="250" class="amount">$250M</td>
+              <td data-label="Careers"><a href="https://fireworks.ai/careers">fireworks.ai/careers</a></td>
+              <td data-label="Sources"><a href="https://craft.co/fireworks-ai/human-capital">Headcount</a> | <a href="https://www.businesswire.com/news/home/20251028604819/en/Fireworks-AI-Raises-250M-Series-C-to-Lead-the-AI-Inference-Market">Funding</a></td>
+            </tr>
+            <tr>
+              <td data-label="Company">Baseten</td>
+              <td data-label="Headcount" data-val="95">95 employees (Jul 2025)</td>
+              <td data-label="Funding Round" data-val="E"><span class="badge series">Series E</span></td>
+              <td data-label="Amount Raised" data-val="300" class="amount">$300M</td>
+              <td data-label="Careers"><a href="https://www.baseten.co/careers">baseten.co/careers</a></td>
+              <td data-label="Sources"><a href="https://craft.co/baseten/human-capital">Headcount</a> | <a href="https://www.baseten.co/blog/announcing-baseten-s-300m-series-e/">Funding</a></td>
+            </tr>
+            <tr>
+              <td data-label="Company">Modular</td>
+              <td data-label="Headcount" data-val="273">273 employees (Jul 2025)</td>
+              <td data-label="Funding Round" data-val="other"><span class="badge strategic">Round 3</span></td>
+              <td data-label="Amount Raised" data-val="250" class="amount">$250M</td>
+              <td data-label="Careers"><a href="https://www.modular.com/careers">modular.com/careers</a></td>
+              <td data-label="Sources"><a href="https://craft.co/modular/human-capital">Headcount</a> | <a href="https://www.modular.com/blog/modular-raises-250m-to-scale-ais-unified-compute-layer">Funding</a></td>
+            </tr>
+            <tr>
+              <td data-label="Company">Deep Infra</td>
+              <td data-label="Headcount" data-val="9">9 employees (Jul 2025)</td>
+              <td data-label="Funding Round" data-val="A"><span class="badge series">Series A</span></td>
+              <td data-label="Amount Raised" data-val="18" class="amount">$18M</td>
+              <td data-label="Careers"><a href="https://www.linkedin.com/company/deep-infra/jobs/">linkedin.com/company/deep-infra/jobs</a></td>
+              <td data-label="Sources"><a href="https://craft.co/deep-infra/human-capital">Headcount</a> | <a href="https://deepinfra.com/blog/18m-milestone">Funding</a></td>
+            </tr>
+            <tr>
+              <td data-label="Company">Anyscale</td>
+              <td data-label="Headcount" data-val="637">637 employees (LinkedIn)</td>
+              <td data-label="Funding Round" data-val="C"><span class="badge series">Series C</span></td>
+              <td data-label="Amount Raised" data-val="100" class="amount">$100M</td>
+              <td data-label="Careers"><a href="https://www.anyscale.com/careers">anyscale.com/careers</a></td>
+              <td data-label="Sources"><a href="https://www.linkedin.com/company/joinanyscale/">Headcount</a> | <a href="https://www.anyscale.com/press/anyscale-secures-100m-series-c-at-1b-valuation-to-radically-simplify-scaling-and-productionizing-ai-applications">Funding</a></td>
+            </tr>
+            <tr>
+              <td data-label="Company">Runpod</td>
+              <td data-label="Headcount" data-val="89">89 employees (LinkedIn)</td>
+              <td data-label="Funding Round" data-val="seed"><span class="badge seed">Seed</span></td>
+              <td data-label="Amount Raised" data-val="20" class="amount">$20M</td>
+              <td data-label="Careers"><a href="https://www.runpod.io/careers">runpod.io/careers</a></td>
+              <td data-label="Sources"><a href="https://www.linkedin.com/company/runpod-io/">Headcount</a> | <a href="https://www.businesswire.com/news/home/20240508053225/en/Runpod-Raises-20M-in-Seed-Funding-Co-led-by-Intel-Capital-and-Dell-Technologies-Capital">Funding</a></td>
+            </tr>
+            <tr>
+              <td data-label="Company">SambaNova</td>
+              <td data-label="Headcount" data-val="394">394 employees (LinkedIn)</td>
+              <td data-label="Funding Round" data-val="E"><span class="badge series">Series E</span></td>
+              <td data-label="Amount Raised" data-val="350" class="amount">$350M+</td>
+              <td data-label="Careers"><a href="https://www.linkedin.com/company/sambanova-systems/jobs/">linkedin.com/company/sambanova-systems/jobs</a></td>
+              <td data-label="Sources"><a href="https://www.linkedin.com/company/sambanova-systems/">Headcount + Funding</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <p class="footer-note">Headcount values are snapshot estimates; funding labels follow language used in cited announcements.</p>
+  </main>
+
+  <script>
+    (function () {
+      /* ── Company count chip ──────────────────────────────────── */
+      const tbody = document.querySelector("#inferenceTable tbody");
+      const countEl = document.getElementById("companyCount");
+      if (countEl) countEl.textContent = tbody.rows.length + " companies tracked";
+
+      /* ── Sorting ─────────────────────────────────────────────── */
+      const TIER = { seed: 0, a: 1, b: 2, c: 3, d: 4, e: 5, strategic: 6, other: 7 };
+
+      function cellValue(row, col, type) {
+        const cell = row.cells[col];
+        if (!cell) return "";
+        const raw = cell.dataset.val || cell.textContent.trim();
+        if (type === "num" || type === "money") return parseFloat(raw.replace(/[^0-9.]/g, "")) || 0;
+        if (type === "tier") return TIER[raw.toLowerCase()] ?? 99;
+        return raw.toLowerCase();
+      }
+
+      let sortCol = -1, sortAsc = true;
+
+      document.querySelectorAll("#inferenceTable thead th").forEach((th) => {
+        th.addEventListener("click", () => {
+          const col  = parseInt(th.dataset.col, 10);
+          const type = th.dataset.type;
+          sortAsc = sortCol === col ? !sortAsc : true;
+          sortCol = col;
+
+          document.querySelectorAll("#inferenceTable thead th").forEach((h) => {
+            h.classList.remove("sort-asc", "sort-desc");
+            h.querySelector(".sort-arrow").textContent = "↕";
+          });
+          th.classList.add(sortAsc ? "sort-asc" : "sort-desc");
+          th.querySelector(".sort-arrow").textContent = sortAsc ? "↑" : "↓";
+
+          const rows = Array.from(tbody.rows);
+          rows.sort((a, b) => {
+            const va = cellValue(a, col, type);
+            const vb = cellValue(b, col, type);
+            const cmp = typeof va === "number" ? va - vb : va.localeCompare(vb);
+            return sortAsc ? cmp : -cmp;
+          });
+          rows.forEach((r) => tbody.appendChild(r));
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
