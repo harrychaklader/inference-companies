@@ -2,7 +2,7 @@
 
 A curated tracker of **startup-focused AI inference companies** — covering headcount, funding stage, amount raised, and careers pages.
 
-🌐 **Live page:** https://harrychaklader.github.io/inference-companies/
+🌐 **Live page:** https://hsmahon.github.io/inference-companies/
 
 ---
 
