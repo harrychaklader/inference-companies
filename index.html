@@ -4,27 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inference Companies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
   <style>
     /* ── Design tokens ─────────────────────────────────────────── */
     :root {
       color-scheme: dark;
-      --bg-0:        #06080b;
-      --bg-hero:     rgba(17, 24, 32, 0.92);
-      --bg-table:    rgba(14, 21, 29, 0.9);
-      --bg-row-odd:  rgba(15, 22, 29, 0.72);
-      --bg-row-even: rgba(10, 16, 23, 0.72);
-      --bg-row-hover:rgba(25, 35, 46, 0.88);
-      --bg-head:     linear-gradient(180deg, #1f2a35 0%, #18222c 100%);
-      --border:      #2b3540;
-      --line:        #2d3a48;
-      --text:        #ecf2f8;
-      --muted:       #9ca9b6;
-      --nvidia:      #76b900;
-      --nvidia-soft: #b6e45f;
-      --ice:         #76d8ff;
+      --bg-0:        #110a06;
+      --bg-hero:     rgba(31, 18, 10, 0.95);
+      --bg-table:    rgba(25, 15, 9, 0.93);
+      --bg-row-odd:  rgba(35, 20, 11, 0.7);
+      --bg-row-even: rgba(23, 14, 8, 0.74);
+      --bg-row-hover:rgba(55, 30, 13, 0.9);
+      --bg-head:     linear-gradient(180deg, #4d2a14 0%, #351b0c 100%);
+      --border:      #8a4e1f;
+      --line:        #6f3d19;
+      --text:        #fff3e9;
+      --muted:       #d0a88d;
+      --nvidia:      #ff9b3d;
+      --nvidia-soft: #ffd09f;
+      --ice:         #ffb874;
       --radius-card: 18px;
-      --font-sans:   "Bahnschrift", "Franklin Gothic Medium", "Segoe UI", sans-serif;
-      --font-serif:  "Palatino Linotype", "Book Antiqua", Palatino, serif;
+      --font-sans:   "IBM Plex Mono", "Consolas", monospace;
+      --font-serif:  "Instrument Serif", "Times New Roman", serif;
+      --font-display:"Bebas Neue", "Impact", sans-serif;
     }
 
     /* ── Reset ─────────────────────────────────────────────────── */
@@ -37,15 +41,17 @@
       font-family: var(--font-serif);
       line-height: 1.5;
       background:
-        radial-gradient(1000px 460px at -8% -18%, rgba(118,185,0,.2), transparent 60%),
-        radial-gradient(740px 420px at 110% 0%, rgba(118,216,255,.13), transparent 60%),
-        linear-gradient(180deg, #05070a 0%, var(--bg-0) 36%, #080b10 100%);
+        radial-gradient(980px 580px at -6% -20%, rgba(255, 136, 46, .28), transparent 60%),
+        radial-gradient(760px 500px at 112% -8%, rgba(255, 191, 97, .2), transparent 60%),
+        repeating-linear-gradient(120deg, rgba(255,255,255,0.015) 0 2px, transparent 2px 12px),
+        linear-gradient(180deg, #140c07 0%, var(--bg-0) 38%, #1a0d06 100%);
     }
 
     /* ── Page wrapper ──────────────────────────────────────────── */
     .page {
       width: min(1400px, 96vw);
       margin: 34px auto;
+      animation: page-rise .65s ease-out both;
     }
 
     /* ── Hero ──────────────────────────────────────────────────── */
@@ -53,42 +59,44 @@
       position: relative;
       overflow: hidden;
       border: 1px solid var(--border);
-      background: linear-gradient(155deg, var(--bg-hero) 0%, rgba(12,18,24,.92) 100%);
+      background: linear-gradient(155deg, var(--bg-hero) 0%, rgba(52,28,14,.92) 100%);
       border-radius: var(--radius-card);
-      box-shadow: 0 18px 42px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.02);
+      box-shadow: 0 20px 40px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.05);
       padding: 28px 30px 24px;
     }
 
     .hero::after {
       content: "";
       position: absolute;
-      right: -28px;
-      top: -40px;
-      width: 260px;
-      height: 160px;
-      border-radius: 40px;
-      background: radial-gradient(circle at 40% 45%, rgba(118,185,0,.26), rgba(118,185,0,.02) 70%);
-      transform: rotate(-12deg);
+      right: -60px;
+      top: -56px;
+      width: 320px;
+      height: 220px;
+      border-radius: 56% 44% 68% 32% / 40% 42% 58% 60%;
+      background: radial-gradient(circle at 42% 43%, rgba(255,154,58,.42), rgba(255,154,58,.07) 70%);
+      transform: rotate(-8deg);
       pointer-events: none;
     }
 
     .kicker {
       margin: 0;
       color: var(--ice);
-      letter-spacing: .18em;
+      letter-spacing: .22em;
       text-transform: uppercase;
       font-family: var(--font-sans);
-      font-weight: 600;
+      font-weight: 700;
       font-size: .76rem;
     }
 
     h1 {
       margin: 8px 0;
-      font-family: var(--font-sans);
-      font-weight: 700;
-      font-size: clamp(1.8rem, 2.7vw, 2.55rem);
-      letter-spacing: .01em;
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: clamp(2.15rem, 4vw, 3.7rem);
+      letter-spacing: .04em;
+      line-height: .9;
       text-wrap: balance;
+      text-shadow: 0 8px 24px rgba(255,143,39,.35);
     }
 
     .subtitle {
@@ -106,13 +114,13 @@
     }
 
     .chip {
-      border: 1px solid #394a58;
-      background: linear-gradient(180deg, rgba(20,30,40,.95), rgba(12,20,28,.95));
+      border: 1px solid #a8632c;
+      background: linear-gradient(180deg, rgba(71, 35, 13,.95), rgba(35,18,9,.95));
       border-radius: 999px;
       padding: 7px 12px;
       font-family: var(--font-sans);
       font-size: .84rem;
-      color: #d7e4f1;
+      color: #ffe7d2;
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -123,7 +131,7 @@
       height: 8px;
       border-radius: 50%;
       background: var(--nvidia);
-      box-shadow: 0 0 0 5px rgba(118,185,0,.15);
+      box-shadow: 0 0 0 5px rgba(255,155,61,.22);
     }
 
     /* ── Table shell ───────────────────────────────────────────── */
@@ -132,7 +140,7 @@
       border: 1px solid var(--border);
       border-radius: var(--radius-card);
       background: var(--bg-table);
-      box-shadow: 0 14px 28px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.02);
+      box-shadow: 0 14px 30px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.04);
       overflow: hidden;
     }
 
@@ -199,20 +207,20 @@
       font-family: var(--font-sans);
       font-weight: 600;
       font-size: .95rem;
-      color: #f2f8ff;
+      color: #fff2e6;
     }
 
     /* ── Links ─────────────────────────────────────────────────── */
     a {
       color: var(--nvidia);
       text-decoration: none;
-      border-bottom: 1px dotted rgba(182,228,95,.45);
+      border-bottom: 1px dotted rgba(255,187,124,.55);
       transition: color .2s, border-color .2s;
       word-break: break-word;
     }
     a:hover {
-      color: #d4f68f;
-      border-bottom-color: rgba(212,246,143,.85);
+      color: #ffe0c2;
+      border-bottom-color: rgba(255,224,194,.9);
     }
 
     /* ── Funding round badges ──────────────────────────────────── */
@@ -230,18 +238,23 @@
       color: #d7e6f4;
       white-space: nowrap;
     }
-    .badge.series  { border-color: rgba(118,185,0,.5);   color: #d3f197; background: rgba(118,185,0,.14); }
-    .badge.series.late { border-color: rgba(255,110,110,.58); color: #ffb3b3; background: rgba(255,110,110,.18); }
-    .badge.seed    { border-color: rgba(118,216,255,.5);  color: #bdeefe; background: rgba(118,216,255,.14); }
-    .badge.strategic{ border-color: rgba(194,166,255,.5); color: #e1d0ff; background: rgba(194,166,255,.14); }
-    .badge.public  { border-color: rgba(194,166,255,.62); color: #eddcff; background: rgba(194,166,255,.2); }
+    .badge.series  { border-color: rgba(255,175,102,.62); color: #ffe4c7; background: rgba(255,140,55,.18); }
+    .badge.series.late { border-color: rgba(255,112,72,.66); color: #ffd6c2; background: rgba(255,91,36,.2); }
+    .badge.seed    { border-color: rgba(255,208,120,.62);  color: #ffedce; background: rgba(255,188,89,.16); }
+    .badge.strategic{ border-color: rgba(221,153,92,.65); color: #f7dcc5; background: rgba(176,112,54,.2); }
+    .badge.public  { border-color: rgba(255,145,59,.8); color: #ffe4be; background: rgba(255,130,39,.28); }
 
     /* ── Amount raised cell ────────────────────────────────────── */
     .amount {
       font-family: var(--font-sans);
       font-weight: 600;
-      color: #d3f197;
+      color: #ffcd95;
       white-space: nowrap;
+    }
+
+    @keyframes page-rise {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     /* ── Footer note ───────────────────────────────────────────── */
