@@ -17,12 +17,6 @@ A curated tracker of **startup-focused AI inference companies** — covering hea
 | **Careers Page** | Direct link to open roles |
 | **Sources** | Public sources used for headcount and funding data |
 
-## Features
-
-- **Column sorting** — click any column header to sort ascending/descending
-- **Responsive** — mobile card layout on small screens, table view on tablet/desktop
-- **NVIDIA dark mode** — styled with NVIDIA green accent palette
-
 ## Changelog
 
 ### Version 0.2 (2026-03-11)
@@ -33,7 +27,3 @@ A curated tracker of **startup-focused AI inference companies** — covering hea
 - Standardized SambaNova sources format to `Headcount | Funding`.
 - Normalized all funding rounds to `Seed` / `Series <Letter>` labels.
 - Updated several headcount snapshots from latest publicly visible LinkedIn/Craft values.
-
-## Contributing
-
-Data goes stale fast. If you spot an outdated headcount or funding entry, open an issue or PR with a source link.
